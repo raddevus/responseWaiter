@@ -1,0 +1,1 @@
+Please write C# console code that will allow the user to provide a date and time on the command line and then the code will generate a string output of the number of days, hours, minutes and seconds since the date time provided. It should produce the string every 5 seconds after starting until the user terminates the console app.```
