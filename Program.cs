@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Globalization;
-using System.Threading;
+using System.Timers;
 
 class Program
 {
+    private static DateTime inputDateTime;
+    private static System.Timers.Timer timer;
+
     static void Main(string[] args)
     {
         if (args.Length == 0)
@@ -14,7 +17,7 @@ class Program
         }
 
         if (!DateTime.TryParseExact(args[0], "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture,
-                                     DateTimeStyles.None, out DateTime inputDateTime))
+                                     DateTimeStyles.None, out inputDateTime))
         {
             Console.WriteLine("Invalid date and time format.");
             Console.WriteLine("Use: yyyy-MM-dd HH:mm:ss (e.g., 2023-05-10 14:30:00)");
@@ -23,15 +26,20 @@ class Program
 
         Console.WriteLine($"Tracking time since: {inputDateTime}");
 
-        while (true)
-        {
-            TimeSpan elapsed = DateTime.Now - inputDateTime;
+        timer = new System.Timers.Timer(5000); // 5 seconds
+        timer.Elapsed += TimerElapsed;
+        timer.AutoReset = true;
+        timer.Enabled = true;
 
-            string output = $"Elapsed: {elapsed.Days} days, {elapsed.Hours} hours, {elapsed.Minutes} minutes, {elapsed.Seconds} seconds";
-            Console.WriteLine(output);
+        Console.WriteLine("Press Enter to exit...");
+        Console.ReadLine(); // Keeps the app running without blocking the timer
+    }
 
-            Thread.Sleep(5000); // Wait 5 seconds
-        }
+    private static void TimerElapsed(object sender, ElapsedEventArgs e)
+    {
+        TimeSpan elapsed = DateTime.Now - inputDateTime;
+
+        string output = $"Elapsed: {elapsed.Days} days, {elapsed.Hours} hours, {elapsed.Minutes} minutes, {elapsed.Seconds} seconds";
+        Console.WriteLine(output);
     }
 }
-
